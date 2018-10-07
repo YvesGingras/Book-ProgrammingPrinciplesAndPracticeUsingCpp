@@ -56,7 +56,7 @@
 #current project 'Book-ProgrammingPrinciplesAndPracticeUsingCpp'
 /.idea/**
 /ProvidedCode/**
-/Chapter00/**
+/Chapter00/.idea/**
 
 
 
