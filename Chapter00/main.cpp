@@ -1,11 +1,23 @@
-#include "Source/std_lib_facilities.h"
-#include "Source/TryThis.h"
-#include "Source/Drills.h"
-#include "Source/Exercices.h"
+#include "std_lib_facilities.h"
+#include "TryThis.h"
+#include "Drills.h"
+#include "Exercices.h"
+#include "Example.h"
 
 using namespace std;
 
 int main() {
-	cout << "Hello, Chapter00!" << endl;
+	cout << "Hello, Chapter00!\n" << endl;
+
+/*Examples*/
+
+
+/*TryThis's*/
+
+
+/*Drills*/
+
+
+	
 	return 0;
 }

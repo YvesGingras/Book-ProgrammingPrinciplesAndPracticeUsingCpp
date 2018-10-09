@@ -1,9 +1,9 @@
 //
-// Created by Yves Gingras on 2018-10-06.
+// Created by Yves Gingras on 2018-10-07.
 //
 
-#ifndef CHAPTER00_TRYTHIS_H
-#define CHAPTER00_TRYTHIS_H
+#ifndef CHAPTER03_EXAMPLE_H
+#define CHAPTER03_EXAMPLE_H
 
 #include "std_lib_facilities.h"
 #include "Utilities.h"
@@ -17,4 +17,4 @@ void ExampleBlaBla() {
 }
 
 
-#endif //CHAPTER00_TRYTHIS_H
+#endif //CHAPTER03_EXAMPLE_H
