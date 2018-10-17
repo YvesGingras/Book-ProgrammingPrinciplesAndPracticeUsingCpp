@@ -8,13 +8,7 @@
 #include "std_lib_facilities.h"
 #include "Utilities.h"
 
-/** @brief Empty Template Method */
-void ExampleBlaBla() {
-	FirstLine("ExampleBlaBla()");
 
-
-	LastLine();
-}
 
 
 #endif //CHAPTER03_EXAMPLE_H

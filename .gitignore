@@ -56,8 +56,12 @@
 #current project 'Book-ProgrammingPrinciplesAndPracticeUsingCpp'
 /.idea/**
 /ProvidedCode/**
+/Z_Archives/**
 /Chapter00/.idea/**
 /Chapter03/.idea/**
+/Chapter04/.idea/**
+/Chapter05/**
+
 
 
 

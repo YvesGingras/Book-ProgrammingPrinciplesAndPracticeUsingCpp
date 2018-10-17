@@ -3,6 +3,8 @@ project(Chapter00)
 
 set(CMAKE_CXX_STANDARD 17)
 
+include_directories(Source)
+
 add_executable(Chapter00 main.cpp
                 Source/TryThis.h
                 Source/Drills.h

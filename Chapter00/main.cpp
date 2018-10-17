@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "std_lib_facilities.h"
 #include "TryThis.h"
 #include "Drills.h"
@@ -9,15 +11,23 @@ using namespace std;
 int main() {
 	cout << "Hello, Chapter00!\n" << endl;
 
+/*Drills*/
+
+
+
 /*Examples*/
+
+
+
+/*Exercices*/
+
 
 
 /*TryThis's*/
 
 
-/*Drills*/
 
 
-	
+
 	return 0;
 }
