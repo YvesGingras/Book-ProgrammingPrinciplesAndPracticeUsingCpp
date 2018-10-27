@@ -54,6 +54,7 @@
 .idea/**/libraries
 
 #current project 'Book-ProgrammingPrinciplesAndPracticeUsingCpp'
+*.xlsx
 /.idea/**
 /ProvidedCode/**
 /Z_Archives/**
@@ -61,6 +62,7 @@
 /Chapter03/.idea/**
 /Chapter04/.idea/**
 /Chapter05/.idea/**
+/Chapter06/.idea/**
 
 
 
