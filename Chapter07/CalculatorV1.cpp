@@ -1,19 +1,10 @@
- 
+//File description.
 /*
- * Created by Yves Gingras on 2018-10-26.
- */
-
-//Exercise description
-/*
- Exercise 3, page 206
- Add a factorial operator: use a suffix ! operator to represent “factorial.”
-
- For example, the expression 7! means 7 * 6 * 5 * 4 * 3 * 2 * 1.
- Make ! bind tighter than * and /; that is, 7*8! means 7*(8!) rather than (7*8)!.
- Begin by modifying the grammar to account for a higher-level operator.
- To agree with the standard mathematical definition of factorial, let 0! evaluate to 1.
- Hint: The calculator functions deal with doubles, but factorial is defined only for ints,
- so just for x!, assign the x to an int and calculate the factorial of that int.
+ * Created by Yves Gingras on 2018-10-27.
+ *
+ * First version (as final implemented from chapter 06),
+ * and refactored to work as OPP.
+ *
  */
 
 //original Grammar
@@ -55,7 +46,6 @@ Number:
 	floating-point-literal
 */
 
-
 //Tested expressions and their expected results.
 /*
 Expressions                     Result
@@ -74,40 +64,36 @@ Exercise10
 
 */
 
+
+// Chapter 7, Testing different input values and trying to program errors.
+/*
+1+2+3+4+5+6+7+8 1–2–3–4
+!+2
+;;;
+(1+3;
+(1+);
+1*2/3%4+5– 6;
+();
+1+;
++1
+1++;
+1/0
+1/0;
+1++2;
+–2;
+– 2;;;; 1234567890123456; 'a';
+q
+1+q
+1+2; q
+ */
+
+#include "CalculatorV1.h"
 #include <iostream>
 
-
 using namespace std;
-//#include "std_lib_facilities.h"
 
-//------------------------------------------------------------------------------
-
-namespace Exercise03
+namespace CalculatorV1
 {
-
-	class Token
-	{
-	public:
-		char kind;        // what kind of token
-		double value;     // for numbers: a value
-		Token(char input)    // make a Token from a char
-				: kind(input), value(0) { }
-
-		Token(char input, double value)     // make a Token from a char and a double
-				: kind(input), value(value) { }
-	};
-
-	class TokenStream
-	{
-	public:
-		TokenStream();   // make a TokenStream that reads from cin
-		Token getToken();      // get a Token (getToken() is defined elsewhere)
-		void putback(Token token);    // put a Token back
-	private:
-		bool isBufferFull;        // is there a Token in the buffer?
-		Token buffer;     // here is where we keep a Token put back using putback()
-	};
-
 	TokenStream::TokenStream()
 			: isBufferFull(false), buffer(0)    // no Token in buffer
 	{
@@ -168,25 +154,20 @@ namespace Exercise03
 		}
 	}
 
-	TokenStream tokenStream;        // provides getToken() and putback()
-
-	int GetFactorial(int nValue);
-	double Expression();    // declaration so that Primary() can call Expression()
-
-// deal with numbers and parentheses
-	double Primary() {
+	// deal with numbers and parentheses
+	double Primary(TokenStream& tokenStream) {
 		Token token = tokenStream.getToken();
 		switch (token.kind) {
 			case '(':    // handle '(' Expression ')'
 			{
-				double expression = Expression();
+				double expression = Expression(tokenStream);
 				token = tokenStream.getToken();
 				if (token.kind != ')') throw runtime_error("')' expected");
 				return expression;
 			}
 			case '{':    // handle '(' Expression ')'
 			{
-				double expression = Expression();
+				double expression = Expression(tokenStream);
 				token = tokenStream.getToken();
 				if (token.kind != '}') throw runtime_error("'}' expected");
 				return expression;
@@ -199,8 +180,8 @@ namespace Exercise03
 	}
 
 	//deals with '!'
-	double Factorial() {
-		double left = Primary();
+	double Factorial(TokenStream& tokenStream) {
+		double left = Primary(tokenStream);
 		int intLeft{};
 		Token token = tokenStream.getToken();
 
@@ -219,19 +200,19 @@ namespace Exercise03
 		}
 	}
 
-// deal with *, /, and %
-	double Term() {
-		double left = Factorial();
+	// deal with *, /, and %
+	double Term(TokenStream& tokenStream) {
+		double left = Factorial(tokenStream);
 		Token token = tokenStream.getToken();        // getToken the next token from token stream
 
 		while (true) {
 			switch (token.kind) {
 				case '*':
-					left *= Factorial();
+					left *= Factorial(tokenStream);
 					token = tokenStream.getToken();
 					break;
 				case '/': {
-					double factorial = Factorial();
+					double factorial = Factorial(tokenStream);
 					if (factorial == 0) throw runtime_error("divide by zero");
 					left /= factorial;
 					token = tokenStream.getToken();
@@ -245,18 +226,18 @@ namespace Exercise03
 	}
 
 	// deal with + and -
-	double Expression() {
-		double left = Term();      // read and evaluate a Term
+	double Expression(TokenStream& tokenStream) {
+		double left = Term(tokenStream);      // read and evaluate a Term
 		Token token = tokenStream.getToken();        // getToken the next token from token stream
 
 		while (true) {
 			switch (token.kind) {
 				case '+':
-					left += Term();    // evaluate Term and add
+					left += Term(tokenStream);    // evaluate Term and add
 					token = tokenStream.getToken();
 					break;
 				case '-':
-					left -= Term();    // evaluate Term and subtract
+					left -= Term(tokenStream);    // evaluate Term and subtract
 					token = tokenStream.getToken();
 					break;
 				default:
@@ -270,72 +251,9 @@ namespace Exercise03
 	int GetFactorial(int nValue) {
 		if (nValue < 0)
 			throw runtime_error("GetFactorial()\n"
-						        "Input must be a positive integer. Received '" + to_string(nValue) + "'.");
+			                    "Input must be a positive integer. Received '" + to_string(nValue) + "'.");
 
 		return nValue==0 ? 1 : nValue*GetFactorial(nValue-1);
 	}
 
-/*
-	int GetFactorial(int nValue) {
-		int result{1};
-
-		for (int i = 1; i < nValue+1; ++i) {
-			result = result*i;
-		}
-		return result;
-	}
- */
-} /*namespace Exercise03*/
-
-int main() {
-	try {
-		//Testing 'GetFactorial()'
-		/*
-		int nValue{};
-		cout << "Enter the 'n' value: " << '\n';
-		cin >> nValue;
-		cout << nValue << "! = " << Exercise03::GetFactorial(nValue);
-		cout<<' ';
-		*/
-		double value = 0;
-
-		cout << "Exercise 03\n"
-		        "Enter expression (ex.: 4!;): " << '\n';
-		while (cin) {
-			Exercise03::Token token = Exercise03::tokenStream.getToken();
-
-			if (token.kind == 'q') break; // 'q' for quit
-			if (token.kind == ';')        // ';' for "print now"
-				cout << "= " << value << '\n';
-			else
-				Exercise03::tokenStream.putback(token);
-			value = Exercise03::Expression();
-		}
-		return 0;
-	}
-	catch (exception& e) {
-		cerr << "error: " << e.what() << '\n';
-		return 1;
-	}
-	catch (...) {
-		cerr << "Oops: unknown exception!\n";
-		return 2;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} /*CalculatorV1*/
