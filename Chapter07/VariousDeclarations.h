@@ -10,7 +10,7 @@
 void FirstLine(const std::string&);
 void LastLine();
 void CalculatorFinalCh06();
-void CalculatorVersion1();
+int CalculatorVersion1();
 
 
 

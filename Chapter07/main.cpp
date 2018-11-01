@@ -13,6 +13,10 @@ int main() {
 
 //		CalculatorFinalCh06();
 		CalculatorVersion1();
+
+
+
+
 		return 0;
 	}
 	catch (exception& e) {
@@ -54,22 +58,18 @@ void CalculatorFinalCh06() {
 }
 
 //VBeginning chapter 7 modification form here.
-void CalculatorVersion1() {
+int CalculatorVersion1() {
+
 	double value = 0;
-	CalculatorCh06::TokenStream tokenStream;
+	CalculatorV1::TokenStream tokenStream;
 
-	cout << "CalculatorFinalCh06\n"
-	        "Enter expression (ex.: 4!;): " << '\n';
-	while (cin) {
-		CalculatorCh06::Token token = tokenStream.getToken();
+	cout << "CalculatorVersion1\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << "> ";
 
-		if (token.kind == 'q') break; // 'q' for quit
-		if (token.kind == ';')        // ';' for "print now"
-			cout << "= " << value << '\n';
-		else
-			tokenStream.putback(token);
-		value = CalculatorCh06::Expression(tokenStream);
-	}
+	CalculatorV1::Calculate(tokenStream);
+
+	return 0;
 }
 
 

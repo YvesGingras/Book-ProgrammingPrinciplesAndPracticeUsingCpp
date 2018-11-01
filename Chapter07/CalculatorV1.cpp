@@ -25,7 +25,7 @@ Number:
 	floating-point-literal
 */
 
-//modified Grammar (managing '!')
+//modified Grammar (managing '!' in Chapter 6)
 /*
 Expression:
     Term
@@ -41,6 +41,29 @@ Factorial:
     Primary "!"
 Primary:
     Number
+	"(" Expression ")"
+Number:
+	floating-point-literal
+*/
+
+//modified Grammar (managing '-' in Chapter 7)
+/*
+Expression:
+    Term
+    Expression "+" Term
+	Expression "–" Term
+Term:
+	Factorial
+	Term "*" Factorial
+    Term "/" Factorial
+    Term "%" Factorial
+Factorial:
+    Primary
+    Primary "!"
+Primary:
+    Number
+    "-" Primary (Chapter 7 modification)
+    "+" Primary (Chapter 7 modification)
 	"(" Expression ")"
 Number:
 	floating-point-literal
@@ -63,7 +86,6 @@ Exercise10
     C = (8!/(8-6)!)/6!;         28
 
 */
-
 
 // Chapter 7, Testing different input values and trying to program errors.
 /*
@@ -89,11 +111,16 @@ q
 
 #include "CalculatorV1.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
 namespace CalculatorV1
 {
+	constexpr char number{8};
+	constexpr char quit{'q'};
+	constexpr char print{';'};
+
 	TokenStream::TokenStream()
 			: isBufferFull(false), buffer(0)    // no Token in buffer
 	{
@@ -132,6 +159,7 @@ namespace CalculatorV1
 			case '*':
 			case '/':
 			case '!':
+			case '%':
 				return Token(input);        // let each character represent itself
 			case '.':
 			case '0':
@@ -147,11 +175,27 @@ namespace CalculatorV1
 				cin.putback(input);         // put digit back into the input stream
 				double value;
 				cin >> value;              // read a floating-point number
-				return Token('8', value);   // let '8' represent "a number"
+				return Token(number, value);   // let '8' represent "a number"
 			}
 			default:
 				throw runtime_error("Bad token");
 		}
+	}
+
+	/**
+	 * @brief Ignore and suppress all input to given character.
+	 */
+	void TokenStream::Ignore(char searchedKind) {
+		if (isBufferFull && searchedKind == buffer.kind){
+			isBufferFull = false;
+			return;
+		}
+		isBufferFull = false;
+
+		char input{0};
+		while (cin>>input)
+			if (input == searchedKind)
+				return;
 	}
 
 	// deal with numbers and parentheses
@@ -172,8 +216,12 @@ namespace CalculatorV1
 				if (token.kind != '}') throw runtime_error("'}' expected");
 				return expression;
 			}
-			case '8':            // we use '8' to represent a number
+			case number:
 				return token.value;  // return the number's value
+			case '-':
+				return - Primary(tokenStream);
+			case '+':
+				return + Primary(tokenStream);
 			default:
 				throw runtime_error("Primary expected");
 		}
@@ -218,6 +266,17 @@ namespace CalculatorV1
 					token = tokenStream.getToken();
 					break;
 				}
+				case '%': {
+					double factorial = Factorial(tokenStream);
+					if (factorial == 0)
+						throw runtime_error("Term()\n"
+						                     "Error: Divided by zer.");
+
+					left = fmod(left,factorial);
+					token = tokenStream.getToken();
+					break;
+				}
+
 				default:
 					tokenStream.putback(token);     // put token back into the token stream
 					return left;
@@ -245,6 +304,39 @@ namespace CalculatorV1
 					return left;       // finally: no more + or -: return the answer
 			}
 		}
+	}
+
+	int Calculate(TokenStream tokenStream) {
+			while (cin)
+			try
+			{
+				CalculatorV1::Token token = tokenStream.getToken();
+
+				while (token.kind == print)
+					token = tokenStream.getToken(); //eat ';'
+
+				if (token.kind == quit) // 'q' for quit
+					return 0;
+
+				tokenStream.putback(token);
+
+				cout << "= " << CalculatorV1::Expression(tokenStream) << '\n';
+				cout << "> ";
+			}
+			catch (exception& e) {
+				cerr << e.what() << '\n';
+				CleanUpMess(tokenStream);
+			}
+			catch (...) {
+				throw runtime_error("An unknown exception has occurred in 'Calculate()'!\n"
+				                    "Program is terminating...");
+			}
+		return 0;
+		}
+
+	//  cleans messy input causing an error, and continue to the next expression.
+	void CleanUpMess(TokenStream tokenStream) {
+		tokenStream.Ignore(print);
 	}
 
 	// Calculates 'n!'

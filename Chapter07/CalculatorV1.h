@@ -24,18 +24,21 @@ namespace CalculatorV1
 	public:
 		TokenStream();   // make a TokenStream that reads from cin
 		Token getToken();      // get a Token (getToken() is defined elsewhere)
+		void Ignore(char searchedKind);
 		void putback(Token token);    // put a Token back
 	private:
 		bool isBufferFull;        // is there a Token in the buffer?
 		Token buffer;     // here is where we keep a Token put back using putback()
 	};
 
-
 	double Expression(TokenStream& tokenStream);
 	double Primary(TokenStream& tokenStream);
 	double Factorial(TokenStream& tokenStream);
 	double Term(TokenStream& tokenStream);
+	int Calculate(TokenStream tokenStream);
+	void CleanUpMess(TokenStream tokenStream);
 	int GetFactorial(int nValue);
+
 } /*CalculatorV1*/
 
 
