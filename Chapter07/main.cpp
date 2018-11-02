@@ -60,12 +60,12 @@ void CalculatorFinalCh06() {
 //VBeginning chapter 7 modification form here.
 int CalculatorVersion1() {
 
-	double value = 0;
+
 	CalculatorV1::TokenStream tokenStream;
 
 	cout << "CalculatorVersion1\n"
 	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
-	cout << "> ";
+	cout << CalculatorV1::prompt;
 
 	CalculatorV1::Calculate(tokenStream);
 
