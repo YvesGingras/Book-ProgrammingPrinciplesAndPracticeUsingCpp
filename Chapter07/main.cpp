@@ -1,6 +1,7 @@
 #include <iostream>
 #include "CalculatorCh06.h"
 #include "CalculatorV1.h"
+#include "Drill.h"
 #include "VariousDeclarations.h"
 
 using namespace std;
@@ -11,8 +12,16 @@ int main() {
 	try
 	{
 
+//		cout << "Sqrt() result: " << Drill::Sqrt(2+3) << endl;
+
+
+		VariousTesting();
 //		CalculatorFinalCh06();
-		CalculatorVersion1();
+//		CalculatorVersion1();
+
+
+//		DrillCh07();
+
 
 
 
@@ -32,7 +41,7 @@ int main() {
 //Definitions
 
 void FirstLine(const string& name) {
-	cout << "\n*" << name << "*";
+	cout << "\n*" << name << "*" << endl;
 }
 
 void LastLine() {
@@ -72,4 +81,42 @@ int CalculatorVersion1() {
 	return 0;
 }
 
+//Modification to CalculatorV1 as described in the chapter's Drill (pg 231)
+int DrillCh07() {
+
+
+	Drill::TokenStream tokenStream;
+
+	cout << "Drill\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << CalculatorV1::prompt;
+
+	Drill::Calculate(tokenStream);
+
+
+
+	return 0;
+}
+
+void VariousTesting() {
+	FirstLine("Various Testing()");
+
+	cout << "\nTesting (debugging) Function's Token creation'\n" << endl;
+	Drill::TokenStream tokenStream;
+
+	cout << "Drill\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << CalculatorV1::prompt;
+
+	Drill::Calculate(tokenStream);
+
+/*
+	cout << "\nTesting 'Drill::Sqrt():'\n"
+		 << "Sqrt(2 + 4.3) = "  << Drill::Sqrt(2 + 4.3) << '\n'
+		 << "2 + Sqrt(2 + 4.3) = "  << 2 + Drill::Sqrt(2 + 4.3) << '\n'
+		 << "((8 + 2) + Sqrt(81)) * 2 = "  << ((8 + 2) +  Drill::Sqrt(81)) * 2 << endl;
+*/
+
+	LastLine();
+}
 

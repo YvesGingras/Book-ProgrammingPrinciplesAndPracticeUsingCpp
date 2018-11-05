@@ -1,18 +1,15 @@
-#include <utility>
-
 /*
- * Created by Yves Gingras on 2018-10-27.
+ * Created by Yves Gingras on 2018-11-02.
  */
 
-#ifndef CHAPTER07_CALCULATORV1CH07_H
-#define CHAPTER07_CALCULATORV1CH07_H
+#ifndef CHAPTER07_DRILL_H
+#define CHAPTER07_DRILL_H
 
-//#include <stringlist.h>
 #include <string>
 
 using std::string;
 
-namespace CalculatorV1
+namespace Drill
 {
 	const char number{'8'};
 	const char quit{'q'};
@@ -21,14 +18,16 @@ namespace CalculatorV1
 	const string result{"= "};
 	const char name{'a'};
 	const char let{'L'};
-	const string declarationKey{"let"};
+	const char function{'F'};
+	const string squareRootKey{"sqrt"};
+	const string declarationKey {"let"};
 
 	class Token
 	{
 	public:
-		char kind;        // what kind of token
-		double value;     // for numbers: a value
-		string variableName;
+		char kind{};        // what kind of token
+		double value{};     // for numbers: a value
+		string callName{};
 
 		Token(char tokenSymbol)    // make a Token from a char
 				: kind(tokenSymbol), value(0) { }
@@ -37,7 +36,7 @@ namespace CalculatorV1
 				: kind(tokenSymbol), value(value) { }
 
 		Token(char tokenSymbol,string name) // make a Token from a char and a string
-				: kind(tokenSymbol), variableName(name) {}
+				: kind(tokenSymbol), callName(name) {}
 	};
 
 	class TokenStream
@@ -74,9 +73,13 @@ namespace CalculatorV1
 	bool isVariableDeclared(const string& searchedVariable);
 	double DefineVariable(string variableName, double variableValue);
 	void PresetVariables();
+	double FunctionCall(TokenStream& tokenStream, string functionName);
 
 	int GetFactorial(int nValue);
-
+	double Sqrt(double number);
 } /*CalculatorV1*/
 
-#endif //CHAPTER07_CALCULATORV1CH07_H
+
+
+
+#endif //CHAPTER07_DRILL_H

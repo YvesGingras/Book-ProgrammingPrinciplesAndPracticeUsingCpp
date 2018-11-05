@@ -11,7 +11,8 @@ void FirstLine(const std::string&);
 void LastLine();
 void CalculatorFinalCh06();
 int CalculatorVersion1();
-
+int DrillCh07();
+void VariousTesting();
 
 
 #endif //CHAPTER07_DECLARATIONS_H

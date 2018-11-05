@@ -213,7 +213,7 @@ double get_value(string s)
 // return the value of the Variable names s
 {
 	for (int i = 0; i<var_table.size(); ++i)
-		if (var_table[i].name == s) return var_table[i].value;
+	if (var_table[i].name == s) return var_table[i].value;
 	throw runtime_error("get: undefined variable " + s);
 }
 
