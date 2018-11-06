@@ -3,6 +3,7 @@
 #include "CalculatorCh06.h"
 #include "CalculatorV1.h"
 #include "Drill.h"
+#include "Exercises.h"
 #include "VariousDeclarations.h"
 
 using namespace std;
@@ -10,12 +11,24 @@ using namespace std;
 int main() {
 	cout << "Hello, Chapter07!\n" << endl;
 
+
+
 	try
 	{
+
+/*
+		cout << std::boolalpha
+		 << isalpha('_')
+		 << isdigit('_')
+		 << isprint('_')
+		 << true;
+*/
+
 //		VariousTesting();
 //		CalculatorFinalCh06();
 //		CalculatorVersion1();
-		DrillCh07();
+//		DrillCh07();
+		ExercisesCh07();
 
 		return 0;
 	}
@@ -76,13 +89,23 @@ int DrillCh07() {
 
 	cout << "Drill\n"
 	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
-	cout << CalculatorV1::prompt;
+	cout << Drill::prompt;
 
 	Drill::Calculate(tokenStream);
 
 
 
 	return 0;
+}
+
+void ExercisesCh07() {
+	Exercises::TokenStream tokenStream;
+	cout << "Exercises\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << Exercises::prompt;
+
+	Exercises::Calculate(tokenStream);
+
 }
 
 void VariousTesting() {

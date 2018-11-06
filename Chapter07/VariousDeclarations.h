@@ -13,6 +13,7 @@ void CalculatorFinalCh06();
 int CalculatorVersion1();
 int DrillCh07();
 void VariousTesting();
+void ExercisesCh07();
 
 
 #endif //CHAPTER07_DECLARATIONS_H
