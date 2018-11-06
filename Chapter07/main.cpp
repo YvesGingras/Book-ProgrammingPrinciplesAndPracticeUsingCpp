@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "CalculatorCh06.h"
 #include "CalculatorV1.h"
 #include "Drill.h"
@@ -11,20 +12,10 @@ int main() {
 
 	try
 	{
-
-//		cout << "Sqrt() result: " << Drill::Sqrt(2+3) << endl;
-
-
-		VariousTesting();
+//		VariousTesting();
 //		CalculatorFinalCh06();
 //		CalculatorVersion1();
-
-
-//		DrillCh07();
-
-
-
-
+		DrillCh07();
 
 		return 0;
 	}
@@ -33,13 +24,9 @@ int main() {
 
 		return 1;
 	}
-
-
-	return 0;
 }
 
 //Definitions
-
 void FirstLine(const string& name) {
 	cout << "\n*" << name << "*" << endl;
 }
@@ -111,12 +98,17 @@ void VariousTesting() {
 	Drill::Calculate(tokenStream);
 
 /*
+	cout << "Pow() result: " << Drill::Pow(2.5,6) << endl;
+	cout << "pow() result: " <<  std::pow(2.5,6) << endl;
+	cout << "" << endl;
+*/
+
+/*
 	cout << "\nTesting 'Drill::Sqrt():'\n"
 		 << "Sqrt(2 + 4.3) = "  << Drill::Sqrt(2 + 4.3) << '\n'
 		 << "2 + Sqrt(2 + 4.3) = "  << 2 + Drill::Sqrt(2 + 4.3) << '\n'
 		 << "((8 + 2) + Sqrt(81)) * 2 = "  << ((8 + 2) +  Drill::Sqrt(81)) * 2 << endl;
 */
-
 	LastLine();
 }
 

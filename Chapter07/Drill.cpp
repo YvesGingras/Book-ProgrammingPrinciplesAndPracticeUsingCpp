@@ -57,8 +57,8 @@ namespace Drill
 		cin >> input;    // note that >> skips whitespace (space, newline, tab, etc.)
 
 		switch (input) {
-			case quit:    // for "print"
-			case print:    // for "quit"
+			case quit:
+			case print:
 			case '(':
 			case ')':
 			case '{':
@@ -70,6 +70,7 @@ namespace Drill
 			case '!':
 			case '%':
 			case '=':
+			case ',':
 				return Token(input);        // let each character represent itself
 			case '.':
 			case '0':
@@ -88,7 +89,7 @@ namespace Drill
 				return Token(number, value);   // let '8' represent "a number"
 			}
 			default:
-				if (isalpha(input)) {
+				if (isalpha(input) || input == '#') { /*Drill.10: use '#' instead of 'let'.*/
 					string stringValue;
 					stringValue += input;
 
@@ -101,10 +102,15 @@ namespace Drill
 					if (stringValue == declarationKey)
 						return Token(let);  // return a new 'L' Token with no value.
 
-					//Continue: Test the capture of the function, and then what's between the parentheses.
-					// the Sqrt(number) function.
 					if (stringValue == squareRootKey)
 						return Token(function, stringValue);  // return a new 'F' Token with no value.
+
+					if (stringValue == powKey)
+						return Token(function, stringValue);  // return a new 'F' Token with no value.
+
+					if (stringValue == exitKey){
+						return Token(quit); /*Drill.11: use keyword 'exit' to quit.*/
+					}
 
 					//return an 'a' Token with the the variable name as value.
 					return Token{name,stringValue};
@@ -201,14 +207,17 @@ namespace Drill
 		return expression;
 	}
 
+	//not quite right yet as it considers the expression up to the ";" as being the argument,
+	// such as "sqrt(25) + 2;" being processed as "sqrt(27);"...
 	double FunctionCall(TokenStream& tokenStream, string functionName) {
 		auto token = tokenStream.getToken();
 
 		if (token.kind != '(')
 			throw runtime_error("FunctionCall()\n"
-					            "Error: use '()' to enclose the arguments pass to the function.");
-
+					            "Error: use '()' to enclose the expression pass to the function.");
 		tokenStream.putback(token);
+
+		//square root function
 		if (functionName == squareRootKey) {
 			auto expression = Expression(tokenStream);
 
@@ -217,6 +226,21 @@ namespace Drill
 				                    "Error: Value pass to the function must be positive.");
 			return  Sqrt(expression);
 		}
+
+		//power function
+		/* Far from being done. For now gives the right output when entry syntax is strickly correct.
+		 * Ex.: one single entry as 'pow(2.5,3);
+		 * Also, no error management, just moving along. */
+		if (functionName == powKey) {
+			Token openParenthesis = tokenStream.getToken(); // no use of '(', to the next token...
+			Token argument1 = tokenStream.getToken(); //
+			Token comma = tokenStream.getToken(); // no use
+			Token argument2 = tokenStream.getToken();
+			Token closingParenthesis = tokenStream.getToken(); // no use of ')'..
+
+			return Pow(argument1.value,int(argument2.value));
+		}
+
 
 		throw runtime_error("FunctionCall()\n"
 					        "Error: No function name '" + functionName + "'.");
@@ -400,4 +424,10 @@ namespace Drill
 	double Sqrt(double number) {
 		return std::sqrt(number);
 	}
+
+	double Pow(double number, int multiple) {
+		return std::pow(number,multiple);
+	}
+
+
 } /*CalculatorV1*/

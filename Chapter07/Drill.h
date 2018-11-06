@@ -19,8 +19,10 @@ namespace Drill
 	const char name{'a'};
 	const char let{'L'};
 	const char function{'F'};
+	const string powKey{"pow"};
 	const string squareRootKey{"sqrt"};
-	const string declarationKey {"let"};
+	const string declarationKey {'#'};
+	const string exitKey {"exit"};
 
 	class Token
 	{
@@ -77,6 +79,7 @@ namespace Drill
 
 	int GetFactorial(int nValue);
 	double Sqrt(double number);
+	double Pow(double number, int multiple);
 } /*CalculatorV1*/
 
 
