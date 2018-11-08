@@ -104,6 +104,9 @@ namespace Exercises
 					if (stringValue == declarationKey)
 						return Token(let);  // return a new 'L' Token with no value.
 
+					if (stringValue == constKey)
+						return Token{constant};
+
 					if (stringValue == squareRootKey)
 						return Token(function, stringValue);  // return a new 'F' Token with no value.
 
@@ -118,7 +121,7 @@ namespace Exercises
 					return Token{name,stringValue};
 				}
 
-				throw runtime_error("GetToken()\n"
+				throw runtime_error("\nGetToken()\n"
 						"Error: Bad token");
 		}
 	}
@@ -140,8 +143,8 @@ namespace Exercises
 	}
 
 	//Variable class
-	Variable::Variable(const string& name, double value)
-			: name(name), value(value) { }
+	Variable::Variable(const string& name, double value, bool isVariable)
+		: name(name), value(value), isVariable(isVariable) {}
 
 	//stand alone methods.
 	int Calculate(TokenStream& tokenStream) {
@@ -181,7 +184,8 @@ namespace Exercises
 		auto token = tokenStream.getToken();
 		switch (token.kind) {
 			case let: // kind =='L':
-				return Declaration(tokenStream);
+			case constant: //kind == 'C'
+				return Declaration(tokenStream, token.kind);
 			case function: // kind == 'F'
 				return FunctionCall(tokenStream, token.callName);
 			default:
@@ -190,22 +194,22 @@ namespace Exercises
 		}
 	}
 
-	double Declaration(TokenStream& tokenStream) {
+	double Declaration(TokenStream& tokenStream, Token variableToken) {
 		Token token = tokenStream.getToken(); // first; the 'a' token (for 'let' input characters...)
 
 		if (token.kind != name)
-			throw runtime_error("Declaration()\n"
-			                    "Error: constant 'name' expected.");
+			throw runtime_error("\nDeclaration()\n"
+			                    "Error: 'name' expected.");
 
 		string variableName = token.callName; //... and the 'a' token associated value: the variable name.
 
 		auto token2 = tokenStream.getToken(); //second; the '=' input character, preceding the 'value' input characters.
 		if (token2.kind != '=')
-			throw runtime_error("Declaration()\n"
+			throw runtime_error("\nDeclaration()\n"
 			                    "Error: '=' missing in declaration of " + variableName);
 
 		double expression = Expression(tokenStream);
-		DefineVariable(variableName, expression);
+		DefineVariable(variableName, expression,variableToken.kind == let);
 
 		return expression;
 	}
@@ -216,7 +220,7 @@ namespace Exercises
 		auto token = tokenStream.getToken();
 
 		if (token.kind != '(')
-			throw runtime_error("FunctionCall()\n"
+			throw runtime_error("\nFunctionCall()\n"
 					            "Error: use '()' to enclose the expression pass to the function.");
 		tokenStream.putback(token);
 
@@ -225,7 +229,7 @@ namespace Exercises
 			auto expression = Expression(tokenStream);
 
 			if (expression < 0)
-				throw runtime_error("FunctionCall()\n"
+				throw runtime_error("\nFunctionCall()\n"
 				                    "Error: Value pass to the function must be positive.");
 			return  Sqrt(expression);
 		}
@@ -245,7 +249,7 @@ namespace Exercises
 		}
 
 
-		throw runtime_error("FunctionCall()\n"
+		throw runtime_error("\nFunctionCall()\n"
 					        "Error: No function name '" + functionName + "'.");
 
 	}
@@ -293,7 +297,7 @@ namespace Exercises
 				case '%': {
 					double factorial = Factorial(tokenStream);
 					if (factorial == 0)
-						throw runtime_error("Term()\n"
+						throw runtime_error("\nTerm()\n"
 						                    "Error: Divided by zer.");
 
 					left = fmod(left,factorial);
@@ -349,8 +353,16 @@ namespace Exercises
 			}
 			case number:
 				return token.value;  // return the number's value
-			case name:
+			case name: {
+				Token tokenNext = tokenStream.getToken(); /*from book's solution*/
+				if (tokenNext.kind == '=') {
+					double expression = Expression(tokenStream);
+					SetValue(token.callName,expression);
+					return expression;
+				}
+				tokenStream.putback(tokenNext);
 				return GetValue(token.callName);
+			}
 			case '-':
 				return - Primary(tokenStream);
 			case '+':
@@ -374,12 +386,12 @@ namespace Exercises
 	}
 
 	// Adds a new variable to variables vector, and returns its value.
-	double DefineVariable(string variableName, double variableValue) {
+	double DefineVariable(string variableName, double variableValue, bool isVariable) {
 		if (isVariableDeclared(variableName))
-			throw runtime_error("DefineVariable\n"
+			throw runtime_error("\nDefineVariable\n"
 			                    "Error: Variable already declared.");
 
-		variables.emplace_back(Variable(variableName,variableValue));
+		variables.emplace_back(Variable(variableName,variableValue,isVariable));
 
 		return variableValue;
 	}
@@ -390,15 +402,21 @@ namespace Exercises
 			if (variable.name == variableName)
 				return variable.value;
 
-		throw runtime_error("GetValue()\n"
+		throw runtime_error("\nGetValue()\n"
 		                    "Error: undefined variable '" + variableName + "'.");
 	}
 
 	//sets the a new value to a variable already present.
 	void SetValue(string variableName, double variableValue) {
 		for (auto& variable : variables) {
-			if (variable.name == variableName)
+			if (variable.name == variableName) {
+				if (!variable.isVariable)
+					throw runtime_error("\nSetValue()\n"
+						 "Error: '" + variableName + "' is a constant.");
+
 				variable.value = variableValue;
+				return;
+			}
 		}
 		throw runtime_error("SetValue()\n"
 		                    "Error: undefined variable '" + variableName + "'.");
@@ -406,12 +424,12 @@ namespace Exercises
 
 	// Set predefined variables at program launch.
 	void PresetVariables() {
-		DefineVariable("pi",3.1415926535);
-		DefineVariable("e",2.7182818284);
-		DefineVariable("k",1000);
-		DefineVariable("x",2.22);
-		DefineVariable("y",4.44);
-		DefineVariable("z",6.66);
+		DefineVariable("pi", 3.1415926535, false);
+		DefineVariable("e", 2.7182818284, false);
+		DefineVariable("k", 1000);
+		DefineVariable("x", 2.22);
+		DefineVariable("y", 4.44);
+		DefineVariable("z", 6.66);
 	}
 
 	// Calculates 'n!'
@@ -431,6 +449,4 @@ namespace Exercises
 	double Pow(double number, int multiple) {
 		return std::pow(number,multiple);
 	}
-
-
 } /*CalculatorV1*/

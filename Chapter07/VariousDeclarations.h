@@ -12,8 +12,9 @@ void LastLine();
 void CalculatorFinalCh06();
 int CalculatorVersion1();
 int DrillCh07();
-void VariousTesting();
+void DrillVariousTesting();
 void ExercisesCh07();
+void ExerciseVariousTesting();
 
 
 #endif //CHAPTER07_DECLARATIONS_H

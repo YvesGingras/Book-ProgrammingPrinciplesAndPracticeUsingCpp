@@ -21,11 +21,13 @@ namespace Exercises
 	const string result{"= "};
 	const char name{'a'};
 	const char let{'L'};
+	const char constant{'C'};
 	const char function{'F'};
 	const string powKey{"pow"};
 	const string squareRootKey{"sqrt"};
 	const string declarationKey {'#'};
 	const string exitKey {"exit"};
+	const string constKey {"const"};
 
 	class Token
 	{
@@ -58,10 +60,11 @@ namespace Exercises
 
 	class Variable {
 	public:
-		Variable(const string& name, double value);
+		Variable(const string& name, double value, bool isVariable = true);
 
 		string name{};
 		double value{};
+		bool isVariable{};
 	};
 
 	double Expression(TokenStream& tokenStream);
@@ -74,9 +77,9 @@ namespace Exercises
 	double Statement(TokenStream& tokenStream);
 	double GetValue(string variableName);
 	void SetValue(string variableName, double variableValue);
-	double Declaration(TokenStream& tokenStream);
+	double Declaration(TokenStream& tokenStream, Token variableToken);
 	bool isVariableDeclared(const string& searchedVariable);
-	double DefineVariable(string variableName, double variableValue);
+	double DefineVariable(string variableName, double variableValue, bool isVariable = true);
 	void PresetVariables();
 	double FunctionCall(TokenStream& tokenStream, string functionName);
 

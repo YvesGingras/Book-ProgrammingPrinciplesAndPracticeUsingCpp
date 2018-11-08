@@ -10,9 +10,6 @@ using namespace std;
 
 int main() {
 	cout << "Hello, Chapter07!\n" << endl;
-
-
-
 	try
 	{
 
@@ -24,7 +21,8 @@ int main() {
 		 << true;
 */
 
-//		VariousTesting();
+//		DrillVariousTesting();
+//		ExerciseVariousTesting();
 //		CalculatorFinalCh06();
 //		CalculatorVersion1();
 //		DrillCh07();
@@ -98,17 +96,7 @@ int DrillCh07() {
 	return 0;
 }
 
-void ExercisesCh07() {
-	Exercises::TokenStream tokenStream;
-	cout << "Exercises\n"
-	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
-	cout << Exercises::prompt;
-
-	Exercises::Calculate(tokenStream);
-
-}
-
-void VariousTesting() {
+void DrillVariousTesting() {
 	FirstLine("Various Testing()");
 
 	cout << "\nTesting (debugging) Function's Token creation'\n" << endl;
@@ -116,7 +104,7 @@ void VariousTesting() {
 
 	cout << "Drill\n"
 	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
-	cout << CalculatorV1::prompt;
+	cout << Drill::prompt;
 
 	Drill::Calculate(tokenStream);
 
@@ -135,3 +123,29 @@ void VariousTesting() {
 	LastLine();
 }
 
+void ExercisesCh07() {
+	Exercises::TokenStream tokenStream;
+	cout << "Exercises\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << Exercises::prompt;
+
+	Exercises::Calculate(tokenStream);
+
+}
+
+void ExerciseVariousTesting() {
+	FirstLine("Various Testing()");
+
+	using namespace Exercises;
+
+
+	Exercises::TokenStream tokenStream;
+	cout << "\nTesting: simulating using a stack as a tokens buffer.'\n" << endl;
+
+	cout << "Exercises\n"
+	        "Enter an expression followed by a semicolon (ex.: 4!;):" << "\n";
+	cout << Exercises::prompt;
+
+	Exercises::Calculate(tokenStream);
+
+}
