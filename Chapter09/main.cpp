@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "Drill.h"
+#include "Chrono.h"
 #include "NamePairs.h"
 
 
@@ -167,6 +168,58 @@ void RunVersion9_7_4() {
 	}
 }
 
+void RunVersionChrono() {
+	using namespace Chrono;
+
+	try {
+		FirstLine("RunVersionChrono'9.8'");
+		Date today{1978,Month::June,25};
+		Date tomorrow{};
+
+		tomorrow = today;
+		tomorrow.AddDay(1);
+
+		cout << "Today's date is: " << today.GetYear() << ',' << int(today.GetMonth()) << ',' << today.GetDay() << ".\n";
+		cout << "Tomorrow will then be " << tomorrow << endl;
+
+
+
+
+
+		tomorrow.AddYear(1);
+		tomorrow.AddMonth(1);
+		tomorrow.AddDay(1);
+	cout << "A day and a month later next year will be " << tomorrow << endl;
+
+//		cout << "Testing  default constructor" << '\n';
+//		vector<Date> dates(10);
+//		for (int i = 0; i < dates.size(); ++i) {
+//			cout << "Date " << to_string(i + 1) << ": " << dates[i];
+//		}
+
+		cout << "\nTesting  '>>' operator." << '\n';
+		Date testInStream{};
+		cout << "Enter date '(yyyy,mm,dd)': \n";
+		cin >> testInStream;
+		cout << "testInStream: " << testInStream << endl;
+
+		LastLine();
+	}
+	catch (exception& e) {
+		auto exceptionWhat{string(e.what())};
+		throw runtime_error(exceptionWhat);
+	}
+	catch (Invalid& invalid) {
+		throw runtime_error(invalid.m_errorMessage);
+	}
+
+	catch (...) {
+		throw runtime_error("An unknown exception has occurred in 'MethodName'!\n"
+		                    "Program is terminating...");
+	}
+}
+
+
 void Exercises3To4() {
 	using NamePair::NamePairs;
 
@@ -203,7 +256,8 @@ int main() {
 //		RunVersion9_4_3();
 //		RunVersion9_7_1();
 //		RunVersion9_7_4();
-		Exercises3To4();
+//		Exercises3To4();
+		RunVersionChrono();
 	}
 	catch (exception& e) {
 		auto exceptionWhat{string(e.what())};
