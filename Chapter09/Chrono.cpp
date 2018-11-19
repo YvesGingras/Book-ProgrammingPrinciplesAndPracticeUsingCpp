@@ -134,16 +134,6 @@ namespace Chrono
 
 	}
 
-	bool operator==(const Date& leftValue, const Date& rightValue) {
-		return leftValue.GetYear() == rightValue.GetYear() &&
-				leftValue.GetMonth() == rightValue.GetMonth() &&
-				leftValue.GetDay() == rightValue.GetDay();
-	}
-
-	bool operator!=(const Date& leftValue, const Date& rightValue) {
-		return !(leftValue == rightValue);
-	}
-
 	std::istream& operator>>(std::istream& inStream, Date& date) {
 		int year{}, month{}, day{};
 		char char1{}, char2{}, char3{}, char4{};
@@ -161,5 +151,15 @@ namespace Chrono
 		date = Date { year, Month(month), day };
 
 		return inStream;
+	}
+
+	bool operator==(const Date& leftValue, const Date& rightValue) {
+		return leftValue.GetYear() == rightValue.GetYear() &&
+				leftValue.GetMonth() == rightValue.GetMonth() &&
+				leftValue.GetDay() == rightValue.GetDay();
+	}
+
+	bool operator!=(const Date& leftValue, const Date& rightValue) {
+		return !(leftValue == rightValue);
 	}
 }/*namespace Chrono*/

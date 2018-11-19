@@ -29,7 +29,7 @@ namespace Chrono
 	class Invalid {
 
 	public:
-		Invalid(const std::string& errorMessage);
+		explicit Invalid(const std::string& errorMessage);
 		std::string m_errorMessage{};
 	};
 

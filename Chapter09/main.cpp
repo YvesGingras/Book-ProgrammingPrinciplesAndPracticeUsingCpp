@@ -3,6 +3,7 @@
 #include "Drill.h"
 #include "Chrono.h"
 #include "NamePairs.h"
+#include "Book.h"
 
 
 using namespace std;
@@ -146,11 +147,13 @@ void RunVersion9_7_4() {
 		tomorrow.AddDay(tomorrow,1);
 		cout << "A day and a month later next year will be " << tomorrow << endl;
 
+/*
 		cout << "Testing  default constructor" << '\n';
 		vector<Date> dates(10);
 		for (int i = 0; i < dates.size(); ++i) {
 			cout << "Date " << to_string(i + 1) << ": " << dates[i];
 		}
+*/
 
 		LastLine();
 	}
@@ -181,10 +184,6 @@ void RunVersionChrono() {
 
 		cout << "Today's date is: " << today.GetYear() << ',' << int(today.GetMonth()) << ',' << today.GetDay() << ".\n";
 		cout << "Tomorrow will then be " << tomorrow << endl;
-
-
-
-
 
 		tomorrow.AddYear(1);
 		tomorrow.AddMonth(1);
@@ -219,6 +218,52 @@ void RunVersionChrono() {
 	}
 }
 
+// Exercises 5 to 9.
+void RunLibraryProject(){
+	using namespace Library;
+
+	FirstLine("RunLibraryProject()");
+	Book book1{};
+	Book book2{
+			"Royal Assassin",
+			"Robin Hobb",
+			"978-2-290-08599-8",
+			Chrono::Date{1995,Chrono::Month::November,20},
+			false};
+
+	Book book3{book2};
+	//****************************
+
+	cout << boolalpha;
+
+	cout << "\nBook1";
+	cout << book1 << endl;
+
+	book2.CheckOut();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	book2.CheckIn();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	book2.CheckOut();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	cout << "\nBook3";
+	cout << book3 << endl;
+
+	cout << "\nTesting equality operator.";
+	cout << "\nbook3 == book2: " << (book3 == book2) << endl;
+	cout << "book3 != book2: " << (book3 != book2) << endl;
+
+	cout << "\nbook1 == book2: " << (book1 == book2) << endl;
+	cout << "book1 != book2: " << (book1 != book2) << endl;
+
+
+	LastLine();
+}
 
 void Exercises3To4() {
 	using NamePair::NamePairs;
@@ -257,8 +302,19 @@ int main() {
 //		RunVersion9_7_1();
 //		RunVersion9_7_4();
 //		Exercises3To4();
-		RunVersionChrono();
+//		RunVersionChrono();
+		RunLibraryProject();
 	}
+	catch (Library::Invalid& e) {
+		auto exceptionWhat{string(e.m_errorMessage)};
+		cerr << exceptionWhat;
+	}
+
+	catch (Chrono::Invalid& e) {
+		auto exceptionWhat{string(e.m_errorMessage)};
+		cerr << exceptionWhat;
+	}
+
 	catch (exception& e) {
 		auto exceptionWhat{string(e.what())};
 		cerr << exceptionWhat;
