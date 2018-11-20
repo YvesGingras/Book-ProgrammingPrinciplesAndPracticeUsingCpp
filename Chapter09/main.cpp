@@ -3,8 +3,8 @@
 #include "Drill.h"
 #include "Chrono.h"
 #include "NamePairs.h"
-#include "Book.h"
-
+#include "Library/Book.h"
+#include "Library/Patron.h"
 
 using namespace std;
 
@@ -244,10 +244,14 @@ void Exercises3To4() {
 	LastLine();
 }
 
-// Exercises 5 to 9.
+// Exercises 5 to 9 (Library project).
+void TestingBookClass(vector<Library::Book> books);
+void TestingPatronClass(vector<Library::Patron> patrons);
+
 void RunLibraryProject(){
 	using namespace Library;
 
+	/******Testing books - Begin*/
 	FirstLine("RunLibraryProject()");
 	Book book1{};
 	Book book2{
@@ -259,39 +263,23 @@ void RunLibraryProject(){
 			false};
 
 	Book book3{book2};
-	//****************************
 
-	cout << boolalpha;
+	vector<Book> books {book1, book2, book3};
+	TestingBookClass(books);
+	/******Testing books - End*/
 
-	cout << "\nBook1";
-	cout << book1 << endl;
 
-	book2.CheckOut();
-	cout << "\nBook2";
-	cout << book2 << endl;
+	/******Testing patrons - Begin*/
+	Patron patron1{};
+	Patron patron2{1234,12.5};
 
-	book2.CheckIn();
-	cout << "\nBook2";
-	cout << book2 << endl;
-
-	book2.CheckOut();
-	cout << "\nBook2";
-	cout << book2 << endl;
-
-	cout << "\nBook3";
-	cout << book3 << endl;
-
-	cout << "\nTesting equality operators.";
-	cout << "\nbook3 == book2: " << (book3 == book2) << endl;
-	cout << "book3 != book2: " << (book3 != book2) << endl;
-
-	cout << "\nbook1 == book2: " << (book1 == book2) << endl;
-	cout << "book1 != book2: " << (book1 != book2) << endl;
+	vector<Patron> patrons {patron1, patron2};
+	TestingPatronClass(patrons);
+	/******Testing patrons - End*/
 
 
 	LastLine();
 }
-
 
 int main() {
 	cout << "Hello, Chapter 09!" << endl;
@@ -328,3 +316,55 @@ int main() {
 	return 0;
 }
 
+void TestingBookClass(vector<Library::Book> books) {
+	auto book1 = books[0];
+	auto book2 = books[1];
+	auto book3 = books[2];
+
+
+	cout << boolalpha;
+
+	cout << "\nBook1";
+	cout << book1 << endl;
+
+	book2.CheckOut();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	book2.CheckIn();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	book2.CheckOut();
+	cout << "\nBook2";
+	cout << book2 << endl;
+
+	cout << "\nBook3";
+	cout << book3 << endl;
+
+	cout << "\nBook equality operators.";
+	cout << "\nbook3 == book2: " << (book3 == book2) << endl;
+	cout << "book3 != book2: " << (book3 != book2) << endl;
+
+	cout << "\nbook1 == book2: " << (book1 == book2) << endl;
+	cout << "book1 != book2: " << (book1 != book2) << endl;
+
+
+}
+
+void TestingPatronClass(vector<Library::Patron> patrons) {
+	auto patron1 = patrons[0];
+	auto patron2 = patrons[1];
+
+	cout << boolalpha;
+
+	cout << "\nPatron1";
+	cout << patron1 << endl;
+
+	cout << "\nPatron2";
+	cout << patron2 << endl;
+	cout << "Fee to pay? " << IsLateFee(patron2) << endl;
+	patron2.SetLateFee(0);
+	cout << patron2 << endl;
+	cout << "Fee to pay? " << IsLateFee(patron2) << endl;
+}

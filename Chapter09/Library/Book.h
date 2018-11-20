@@ -9,7 +9,7 @@
 
 //#include <string>
 #include <vector>
-#include "Chrono.h"
+#include "../Chrono.h"
 
 namespace Library
 {
@@ -55,7 +55,7 @@ namespace Library
 		std::string mIsbn{};
 		Chrono::Date mCopyrightDate{};
 		Genre mGenre{};
-		static const std::vector<std::string> mGenres;
+		static const std::vector<std::string> mStringGenres;
 		bool mIsCheckedOut{};
 		bool IsIsbnValid(std::string isbn);
 		static std::string GetStringGenre(Genre genre);

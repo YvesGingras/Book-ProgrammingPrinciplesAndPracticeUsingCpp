@@ -13,7 +13,7 @@ using namespace std;
 
 namespace Library
 {
-	const std::vector<std::string> Book::mGenres{"ToDefine", "Fiction", "NonFiction",
+	const std::vector<std::string> Book::mStringGenres{"ToDefine", "Fiction", "NonFiction",
 	                                             "Periodical", "Biography", "Children"};
 
 	Book::Book() : mTitle("title"), mAuthor("author name"), mIsbn("isbn") { }
@@ -136,7 +136,7 @@ namespace Library
 	}
 
 	std::string Book::GetStringGenre(Genre genre) {
-		return mGenres[(int) genre];
+		return mStringGenres[(int) genre];
 	}
 
 	Invalid::Invalid(const string& errorMessage)
