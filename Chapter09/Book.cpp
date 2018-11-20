@@ -13,16 +13,20 @@ using namespace std;
 
 namespace Library
 {
+	const std::vector<std::string> Book::mGenres{"ToDefine", "Fiction", "NonFiction",
+	                                             "Periodical", "Biography", "Children"};
+
 	Book::Book() : mTitle("title"), mAuthor("author name"), mIsbn("isbn") { }
 
-	//Continue: Implement constructor with a validation function
 	Book::Book(const std::string& title, const std::string& author, const std::string& isbn,
-	     const Chrono::Date& copyrightDate, bool isCheckedOut) : mTitle(title), mAuthor(author), mIsbn(isbn),
-	                                                             mCopyrightDate(copyrightDate),
-	                                                             mIsCheckedOut(isCheckedOut) {
-		if(!IsIsbnValid(isbn))
+	           const Chrono::Date& copyrightDate, Genre genre, bool isCheckedOut)
+			: mTitle(title), mAuthor(author), mIsbn(isbn),
+			  mCopyrightDate(copyrightDate),
+			  mGenre(genre),
+			  mIsCheckedOut(isCheckedOut) {
+		if (!IsIsbnValid(isbn))
 			throw Invalid("\nBook(string,string,string,Date,bool)\n"
-				 "Error: Invalid ISBN '" + isbn + "'");
+			              "Error: Invalid ISBN '" + isbn + "'");
 	};
 
 	bool Book::IsIsbnValid(std::string isbn) {
@@ -82,14 +86,14 @@ namespace Library
 		}
 		catch (Invalid& e) {
 			throw runtime_error("An exception has occurred in 'IsIsbnValid(string)': \n"
-					   "Error: " + e.m_errorMessage);
+			                    "Error: " + e.m_errorMessage);
 		}
 	}
 
 	void Book::CheckIn() {
 		if (!mIsCheckedOut)
 			throw Invalid("CheckIn(Book)\n"
-				 "Error: book '" + GetTitle() + "' is already checked in.");
+			              "Error: book '" + GetTitle() + "' is already checked in.");
 
 		mIsCheckedOut = false;
 	}
@@ -102,6 +106,10 @@ namespace Library
 		mIsCheckedOut = true;
 	}
 
+	Genre Book::GetGenre() const {
+		return mGenre;
+	}
+
 	bool operator==(const Book& lhs, const Book& rhs) {
 		return lhs.mIsbn == rhs.mIsbn;
 	}
@@ -110,22 +118,28 @@ namespace Library
 		return !(rhs == lhs);
 	}
 
-	Invalid::Invalid(const string& errorMessage)
-			: m_errorMessage(errorMessage){	}
-
 	ostream& operator<<(ostream& outStream, Book& book) {
-		string isCheckedOut {book.GetIsCheckedOut() ? "true" : "false"};
-		string date {to_string(book.GetCopyrightDate().GetYear())
-		                     + ',' + to_string(int(book.GetCopyrightDate().GetMonth()))
-		                     + ',' + to_string(book.GetCopyrightDate().GetDay())};
+		string isCheckedOut{book.GetIsCheckedOut() ? "true" : "false"};
+		string date{to_string(book.GetCopyrightDate().GetYear())
+		            + ',' + to_string(int(book.GetCopyrightDate().GetMonth()))
+		            + ',' + to_string(book.GetCopyrightDate().GetDay())};
+
+		string genre = Book::GetStringGenre(book.GetGenre());
+
 		return outStream << "\nBook's specifications:"
 		                    "\n  Title: " + book.GetTitle() +
 		                    "\n  Author: " + book.GetAuthor() +
 		                    "\n  ISBN: " + book.GetIsbn() +
-							"\n  Copyright Date: " + date +
-							"\n  Checked Out Status: " + isCheckedOut;
-
-
-
+		                    "\n  Copyright Date: " + date +
+		                    "\n  Genre: " + genre +
+		                    "\n  Checked Out Status: " + isCheckedOut;
 	}
+
+	std::string Book::GetStringGenre(Genre genre) {
+		return mGenres[(int) genre];
+	}
+
+	Invalid::Invalid(const string& errorMessage)
+			: m_errorMessage(errorMessage) { }
+
 }/*namespace Library*/

@@ -218,6 +218,32 @@ void RunVersionChrono() {
 	}
 }
 
+void Exercises3To4() {
+	using NamePair::NamePairs;
+
+	FirstLine("Exercise3To4()");
+
+	NamePairs namePairs1{};
+	namePairs1.ReadNames();
+//	namePairs1.Print();
+
+	NamePairs namePairs2{};
+	namePairs2.ReadNames();
+
+	cout << "\n*namePairs1*";
+	cout << namePairs1;
+
+	cout << "\n*namePairs2*";
+	cout << namePairs2;
+
+	cout << boolalpha;
+	cout << "\nboolean operators testing\n";
+	cout << "namePairs1 == namePairs2: " << (namePairs1 == namePairs2) << '\n';
+	cout << "namePairs1 != namePairs2: " << (namePairs1 != namePairs2) << '\n';
+
+	LastLine();
+}
+
 // Exercises 5 to 9.
 void RunLibraryProject(){
 	using namespace Library;
@@ -228,7 +254,8 @@ void RunLibraryProject(){
 			"Royal Assassin",
 			"Robin Hobb",
 			"978-2-290-08599-8",
-			Chrono::Date{1995,Chrono::Month::November,20},
+			Chrono::Date{1995, Chrono::Month::November, 20},
+			Genre::Fiction,
 			false};
 
 	Book book3{book2};
@@ -254,7 +281,7 @@ void RunLibraryProject(){
 	cout << "\nBook3";
 	cout << book3 << endl;
 
-	cout << "\nTesting equality operator.";
+	cout << "\nTesting equality operators.";
 	cout << "\nbook3 == book2: " << (book3 == book2) << endl;
 	cout << "book3 != book2: " << (book3 != book2) << endl;
 
@@ -265,32 +292,6 @@ void RunLibraryProject(){
 	LastLine();
 }
 
-void Exercises3To4() {
-	using NamePair::NamePairs;
-
-	FirstLine("Exercise3To4()");
-
-	NamePairs namePairs1{};
-	namePairs1.ReadNames();
-//	namePairs1.Print();
-
-	NamePairs namePairs2{};
-	namePairs2.ReadNames();
-
-	cout << "\n*namePairs1*";
-	cout << namePairs1;
-
-	cout << "\n*namePairs2*";
-	cout << namePairs2;
-
-
-	cout << boolalpha;
-	cout << "\nboolean operators testing\n";
-	cout << "namePairs1 == namePairs2: " << (namePairs1 == namePairs2) << '\n';
-	cout << "namePairs1 != namePairs2: " << (namePairs1 != namePairs2) << '\n';
-
-	LastLine();
-}
 
 int main() {
 	cout << "Hello, Chapter 09!" << endl;
