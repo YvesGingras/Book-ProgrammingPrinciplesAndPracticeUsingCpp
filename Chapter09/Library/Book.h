@@ -11,7 +11,7 @@
 #include <vector>
 #include "../Chrono.h"
 
-namespace Library
+namespace Learning
 {
 	enum class Genre {
 		ToDefine,
@@ -66,5 +66,5 @@ namespace Library
 
 
 
-} /*namespace Library*/
+} /*namespace Learning*/
 #endif //CHAPTER09_BOOK_H

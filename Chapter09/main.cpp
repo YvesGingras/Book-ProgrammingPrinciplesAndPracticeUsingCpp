@@ -5,6 +5,7 @@
 #include "NamePairs.h"
 #include "Library/Book.h"
 #include "Library/Patron.h"
+#include "Library/Library.h"
 
 using namespace std;
 
@@ -244,39 +245,64 @@ void Exercises3To4() {
 	LastLine();
 }
 
-// Exercises 5 to 9 (Library project).
-void TestingBookClass(vector<Library::Book> books);
-void TestingPatronClass(vector<Library::Patron> patrons);
+// Exercises 5 to 9 (Learning project).
+void TestingBookClass(vector<Learning::Book> books);
+void TestingPatronClass(vector<Learning::Patron>& patrons);
+std::vector<Learning::Book> CreateBooks();
 
 void RunLibraryProject(){
-	using namespace Library;
+	using namespace Learning;
+
+	FirstLine("RunLibraryProject()");
+
+	Chrono::Date checkOutDate {2018, Chrono::Month::November,21};
 
 	/******Testing books - Begin*/
-	FirstLine("RunLibraryProject()");
-	Book book1{};
-	Book book2{
-			"Royal Assassin",
-			"Robin Hobb",
-			"978-2-290-08599-8",
-			Chrono::Date{1995, Chrono::Month::November, 20},
-			Genre::Fiction,
-			false};
-
-	Book book3{book2};
-
-	vector<Book> books {book1, book2, book3};
+	vector<Book> books =  CreateBooks();;
 	TestingBookClass(books);
+	Book phonyBook {"Phony book","nobody","1-2-3-4-5",checkOutDate,Genre::ToDefine,false};
 	/******Testing books - End*/
-
 
 	/******Testing patrons - Begin*/
 	Patron patron1{};
-	Patron patron2{1234,12.5};
+	Patron patron2{2,12.5};
+	Patron patron3{3,1.5};
+	Patron patron4{4,0};
+	Patron patron5{5,5.75};
+	Patron phonyPatron {999999,0};
 
-	vector<Patron> patrons {patron1, patron2};
-	TestingPatronClass(patrons);
+
+	vector<Patron> patrons {patron1, patron2, patron3, patron4, patron5};
+	TestingPatronClass(patrons); //todo: somehow deal with '* and &' (??) to bring modification back to caller.
 	/******Testing patrons - End*/
 
+	/******Testing Library - Begin*/
+	Library library;
+	library.AddBook(books[0]);
+	library.AddBook(books[1]);
+	library.AddBook(books[3]);
+	library.AddBook(books[4]);
+
+	library.AddPatron(patron1);
+	library.AddPatron(patron2); // todo: should bring back 'LateFee' at the value set in 'TestingPatronClass()' method.
+	library.AddPatron(patron3);
+	library.AddPatron(patron4);
+	library.AddPatron(patron5);
+
+//	library.CheckOutBook(patron2,books[1], checkOutDate); /*error ows a fee.*/
+//	library.CheckOutBook(patron4,phonyBook, checkOutDate); /*error book not present.*/
+//	library.CheckOutBook(phonyPatron,books[1], checkOutDate); /*error user not present.*/
+	library.CheckOutBook(patron4,books[1], checkOutDate);
+
+
+	//Continue: Create 'TestingLibraryClass'
+	cout << "\nLibrary ******************************";
+	library.DisplayIndebtedPatrons();
+
+
+	cout << "";
+
+	/******Testing Library - End*/
 
 	LastLine();
 }
@@ -294,7 +320,7 @@ int main() {
 //		RunVersionChrono();
 		RunLibraryProject();
 	}
-	catch (Library::Invalid& e) {
+	catch (Learning::Invalid& e) {
 		auto exceptionWhat{string(e.m_errorMessage)};
 		cerr << exceptionWhat;
 	}
@@ -316,7 +342,8 @@ int main() {
 	return 0;
 }
 
-void TestingBookClass(vector<Library::Book> books) {
+//utility
+void TestingBookClass(vector<Learning::Book> books) {
 	auto book1 = books[0];
 	auto book2 = books[1];
 	auto book3 = books[2];
@@ -324,6 +351,7 @@ void TestingBookClass(vector<Library::Book> books) {
 
 	cout << boolalpha;
 
+	cout << "\nBook ******************************";
 	cout << "\nBook1";
 	cout << book1 << endl;
 
@@ -352,11 +380,14 @@ void TestingBookClass(vector<Library::Book> books) {
 
 }
 
-void TestingPatronClass(vector<Library::Patron> patrons) {
+void TestingPatronClass(vector<Learning::Patron>& patrons) {
 	auto patron1 = patrons[0];
 	auto patron2 = patrons[1];
+	auto patron3 = patrons[2];
+	auto patron4 = patrons[3];
 
 	cout << boolalpha;
+	cout << "\nPatron ******************************";
 
 	cout << "\nPatron1";
 	cout << patron1 << endl;
@@ -364,7 +395,48 @@ void TestingPatronClass(vector<Library::Patron> patrons) {
 	cout << "\nPatron2";
 	cout << patron2 << endl;
 	cout << "Fee to pay? " << IsLateFee(patron2) << endl;
-	patron2.SetLateFee(0);
+	patron2.SetLateFee(500); //
 	cout << patron2 << endl;
 	cout << "Fee to pay? " << IsLateFee(patron2) << endl;
+
+	cout << "\nPatron3";
+	cout << patron3 << endl;
+	cout << "Fee to pay? " << IsLateFee(patron3) << endl;
+
+	cout << "\nPatron4";
+	cout << patron4 << endl;
+	cout << "Fee to pay? " << IsLateFee(patron4) << endl;
+}
+
+std::vector<Learning::Book> CreateBooks() {
+	using namespace Learning;
+	Learning::Book book1{};
+	Learning::Book book2{
+			"Royal Assassin",
+			"Robin Hobb",
+			"978-2-290-08599-8",
+			Chrono::Date{1995, Chrono::Month::November, 20},
+			Learning::Genre::Fiction,
+			false};
+
+	Learning::Book book3{book2};
+
+	Learning::Book book4{
+			"Programming: Principles and Practice Using C++",
+			"Bjarne Stroustrup",
+			"978-0-321-99278-9",
+			Chrono::Date{2018, Chrono::Month::January, 01},
+			Learning::Genre::NonFiction,
+			false};
+
+	Learning::Book book5{
+			"Effective Modern C++",
+			"Scott Meyers",
+			"978-1-491-90399-5",
+			Chrono::Date{2015, Chrono::Month::January, 01},
+			Learning::Genre::NonFiction,
+			false};
+
+	return vector<Book>  {book1, book2, book3, book4, book5};
+
 }

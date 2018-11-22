@@ -11,7 +11,7 @@
 
 using namespace std;
 
-namespace Library
+namespace Learning
 {
 	const std::vector<std::string> Book::mStringGenres{"ToDefine", "Fiction", "NonFiction",
 	                                             "Periodical", "Biography", "Children"};
@@ -142,4 +142,4 @@ namespace Library
 	Invalid::Invalid(const string& errorMessage)
 			: m_errorMessage(errorMessage) { }
 
-}/*namespace Library*/
+}/*namespace Learning*/
