@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Chapter10 main.cpp
         FinalExample.cpp FinalExample.h
-        Invalid.h)
+        Invalid.h
+        Drill/Point.h
+        Drill/Drill.cpp Drill/Drill.h)
