@@ -12,6 +12,10 @@ namespace Drill
 {
 	struct Point
 	{
+		friend bool operator==(const Point& lhs, const Point& rhs);
+
+		friend bool operator!=(const Point& lhs, const Point& rhs);
+
 		double x{};
 		double y{};
 	};
