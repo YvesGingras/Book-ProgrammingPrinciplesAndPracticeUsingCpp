@@ -7,4 +7,5 @@ add_executable(Chapter10 main.cpp
         FinalExample.cpp FinalExample.h
         Invalid.h
         Drill/Point.h
-        Drill/Drill.cpp Drill/Drill.h)
+        Drill/Drill.cpp Drill/Drill.h
+        Exercises/Exercises.cpp Exercises/Exercises.h)

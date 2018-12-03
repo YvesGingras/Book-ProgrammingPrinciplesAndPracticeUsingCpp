@@ -150,6 +150,71 @@ namespace Temperatures
 		return inStream;
 	}
 
+	vector<Temperatures::Reading> TemperaturesReading(ifstream& inStringFile) {
+		vector<Temperatures::Reading> readings;
+
+		while (true) {
+			Temperatures::Reading reading;
+			if (!(inStringFile >> reading)) //set 'isTestingMode=true' to test
+				break;
+			readings.push_back(reading);
+		}
+		return readings;
+	}
+
+	vector<Temperatures::Month> MonthsReading(ifstream& inStringFile) {
+		vector<Temperatures::Month> months;
+
+		while (true) {
+			Temperatures::Month month;
+			if (!(inStringFile >> month)) //set 'isTestingMode=true' to test
+				break;
+			months.push_back(month);
+		}
+		return months;
+	}
+
+	vector<Temperatures::Year> YearsReading(ifstream& inSteamFile) {
+		vector<Temperatures::Year> years;
+
+		while (true) {
+			Temperatures::Year year;
+			if (!(inSteamFile >> year)) //set 'isTestingMode=true' to test
+				break;
+			years.push_back(year);
+		}
+
+		return years;
+	}
+
+	void PrintTemperaturesData(const vector<Temperatures::Year>& years) {
+		for (const auto& currentYear : years) {
+			cout << "\nYear: " << currentYear.year << '\n';
+
+			for (auto currentMonth : currentYear.months) {
+				if (currentMonth.month != Temperatures::notAMonth) {
+					cout << "  Month: " << Temperatures::monthInputTable[currentMonth.month] << '\n';
+
+					for (int i = 0; i < currentMonth.days.size(); ++i) { //days
+						Temperatures::Day currentDay{currentMonth.days[i]};
+						bool isDayPrinted{false};
+
+						for (int j = 0; j < currentDay.hours.size(); ++j) { //hours
+							if (currentDay.hours[j] != Temperatures::notAReading) {
+								if (!isDayPrinted) {
+									cout << "    Day of the month: " << to_string(i) << '\n';
+									isDayPrinted = true;
+								}
+								cout << "      Temperature at hour '" << to_string(j) << "': "
+								     << to_string(currentDay.hours[j]) << endl;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	void EndOfLoop(istream& inStream, char terminator, std::string errorMessage) {
 		if (inStream.fail()) {
 			inStream.clear();

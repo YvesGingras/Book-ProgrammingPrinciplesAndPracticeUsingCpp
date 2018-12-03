@@ -9,6 +9,7 @@
 using namespace std;
 namespace Drill
 {
+	//Method used before implementing 'operator>>
 	vector<Drill::Point>& GetPoints(vector<Drill::Point>& points) {
 		char char1{}, char2{}, char3{};
 		char test{};
@@ -52,9 +53,9 @@ namespace Drill
 		return points;
 	}
 
-	void PrintPoints(const vector<Point>& points, bool isErrorCall) {
+	void PrintPoints(const vector<Point>& points, bool isFromErrorCall) {
 		if (!points.empty()) {
-			if (!isErrorCall)
+			if (!isFromErrorCall)
 				cout << "\nList of entered coordinate(s):\n";
 			for (const auto& point : points)
 				cout << "(" << point.x << ',' << point.y << ')' << '\n';
@@ -62,37 +63,33 @@ namespace Drill
 			cout << "No coordinate(s) entered.\n";
 	}
 
-	std::vector<Point> GetPoints(std::istream& inStream) {
-		vector<Point> points;
+	void EndOfLoop(std::istream& inStream, char terminator, const string& errorMessage) {
+		if (inStream.fail()) {
+			inStream.clear();
+			char input{};
+			if ((inStream >> input && input == Drill::quit) || inStream.eof())
+				return;
 
-		//TODO 2- Define content as 'YearsReading'.
-
-		return points;
+			throw Invalid(errorMessage);
+		}
 	}
 
 	std::istream& operator>>(std::istream& inStream, Point& point) {
 		char parenthesisOpen{}, comma{}, parenthesisClose{};
-		char test{};
 		double x{}, y{};
 
-		inStream.exceptions(inStream.exceptions() | ios_base::badbit);
-
-		inStream >> test;
-		if (test == quit) {
+		if ((inStream >> parenthesisOpen && parenthesisOpen != '(')) {
 			inStream.unget();
-			inStream.clear(ios::failbit);
+			inStream.clear(ios_base::failbit);
 			return inStream;
 		}
 
-		if (test != parenthesisOpen) {
-			inStream.unget();
-			inStream.clear(ios::badbit);
+		inStream >> x >> comma >> y >> parenthesisClose;
+		if (parenthesisOpen != '(' || comma != ',' || parenthesisClose != ')') {
+			inStream.clear(ios_base::failbit);
 			return inStream;
 		}
 
-
-		inStream.unget();
-		inStream >> parenthesisOpen >> x >> comma >> y >> parenthesisClose;
 		point.x = x;
 		point.y = y;
 
@@ -101,8 +98,16 @@ namespace Drill
 
 	std::ostream& operator<<(std::ostream& os, const Point& point) {
 		// TODO review what to print
-		os << "x: " << point.x << " y: " << point.y;
+		os << "(" << point.x << ',' << point.y << ')';
 		return os;
 	}
 
+	bool operator==(const Point& lhs, const Point& rhs) {
+		return lhs.x == rhs.x &&
+		       lhs.y == rhs.y;
+	}
+
+	bool operator!=(const Point& lhs, const Point& rhs) {
+		return !(rhs == lhs);
+	}
 }/*Drill*/

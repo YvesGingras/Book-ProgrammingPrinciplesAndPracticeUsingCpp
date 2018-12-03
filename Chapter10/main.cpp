@@ -1,12 +1,16 @@
+#include <algorithm>
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include "FinalExample.h"
 #include "Invalid.h"
 #include "Drill/Drill.h"
+#include "Exercises/Exercises.h"
 
 using namespace std;
 
-/*******************Utility - Begin*/
+
+//Utility
 ifstream GetInFileStream(const string& filePath) {
 	ifstream inStringFile{filePath};
 	if (!inStringFile)
@@ -34,81 +38,14 @@ void FirstLine(const string& name) {
 void LastLine() {
 	cout << "----------------------------------\n";
 }
-/*Utility - End*/
 
-
-/*******************Final Example - Begin*/
-vector<Temperatures::Reading> TemperaturesReading(ifstream& inStringFile) {
-	vector<Temperatures::Reading> readings;
-
-	while (true) {
-		Temperatures::Reading reading;
-		if (!(inStringFile >> reading)) //set 'isTestingMode=true' to test
-			break;
-		readings.push_back(reading);
-	}
-	return readings;
-}
-
-vector<Temperatures::Month> MonthsReading(ifstream& inStringFile) {
-	vector<Temperatures::Month> months;
-
-	while (true) {
-		Temperatures::Month month;
-		if (!(inStringFile >> month)) //set 'isTestingMode=true' to test
-			break;
-		months.push_back(month);
-	}
-	return months;
-}
-
-vector<Temperatures::Year> YearsReading(ifstream& inSteamFile) {
-	vector<Temperatures::Year> years;
-
-	while (true) {
-		Temperatures::Year year;
-		if (!(inSteamFile >> year)) //set 'isTestingMode=true' to test
-			break;
-		years.push_back(year);
-	}
-
-	return years;
-}
-
-void PrintTemperaturesData(const vector<Temperatures::Year>& years) {
-	for (const auto& currentYear : years) {
-		cout << "\nYear: " << currentYear.year << '\n';
-
-		for (auto currentMonth : currentYear.months) {
-			if (currentMonth.month != Temperatures::notAMonth) {
-				cout << "  Month: " << Temperatures::monthInputTable[currentMonth.month] << '\n';
-
-				for (int i = 0; i < currentMonth.days.size(); ++i) { //days
-					Temperatures::Day currentDay{currentMonth.days[i]};
-					bool isDayPrinted{false};
-
-					for (int j = 0; j < currentDay.hours.size(); ++j) { //hours
-						if (currentDay.hours[j] != Temperatures::notAReading) {
-							if (!isDayPrinted) {
-								cout << "    Day of the month: " << to_string(i) << '\n';
-								isDayPrinted = true;
-							}
-							cout << "      Temperature at hour '" << to_string(j) << "': "
-							     << to_string(currentDay.hours[j]) << endl;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
+//Final Example
 void ReadInTestMode(const string& projectPath) {
 	/*testing reading temperatures*/
 	string temperaturesFilePath{projectPath + "Temperatures.txt"};
 	ifstream inStringTemperatures{GetInFileStream(temperaturesFilePath)};
 
-	vector<Temperatures::Reading> Temperatures{TemperaturesReading(inStringTemperatures)};
+	vector<Temperatures::Reading> Temperatures{Temperatures::TemperaturesReading(inStringTemperatures)};
 	cout << "\nTesting 'temperatures only reading" << endl;
 	for (const auto& temperature : Temperatures)
 		cout << "Day of the month: " << temperature.day
@@ -119,7 +56,7 @@ void ReadInTestMode(const string& projectPath) {
 	string monthsFilePath{projectPath + "Months.txt"};
 	ifstream inStringMonths{GetInFileStream(monthsFilePath)};
 
-	vector<Temperatures::Month> Months{MonthsReading(inStringMonths)};
+	vector<Temperatures::Month> Months{Temperatures::MonthsReading(inStringMonths)};
 	cout << "\nTesting 'Months' only" << endl;
 	for (const auto& month : Months) {
 		cout << "Month: '" << month.month << "'" << endl;
@@ -129,7 +66,7 @@ void ReadInTestMode(const string& projectPath) {
 	string yearsFilePath{projectPath + "Years.txt"};
 	ifstream inStringYears{GetInFileStream(yearsFilePath)};
 
-	vector<Temperatures::Year> Years{YearsReading(inStringYears)};
+	vector<Temperatures::Year> Years{Temperatures::YearsReading(inStringYears)};
 	cout << "\nTesting 'years' only" << endl;
 	for (const auto& year : Years) {
 		cout << "Year: '" << year.year << "'" << endl;
@@ -149,80 +86,73 @@ void RunFinalExample() {
 		ifstream inStringYearsComplete{GetInFileStream(yearsCompleteFilePath)};
 
 		cout << "\nYears complete data." << endl;
-		vector<Temperatures::Year> years{YearsReading(inStringYearsComplete)};
+		vector<Temperatures::Year> years{Temperatures::YearsReading(inStringYearsComplete)};
 		PrintTemperaturesData(years);
 	}
 
 	LastLine();
 }
 
-/*Final Example - End*/
-
-/*/*******************Drill - Begin*/
+//Drill
 void RunDrill() {
 	/*
 	Valid Input sample:
-	(2,5) (2.2,5.5) (2.25,7.25) (3.4,5.5) (8.25,103.125) (122,236.625) (0.25,0.125) |
+	(2,5) (2.2,5.5) (2.25,7.25) (3.4,5.5) (8.25,103.125) (122,236.625) (0.25,0.125) q
 
 	 Error input sample:
-	 (8.25,103.125) (122,error) (0.25,0.125) |
-	 (8.25,103.125) (0.25,0.125) (122,error) (0.25,0.125) |
+	 (8.25,103.125) (122,error) (0.25,0.125) q
+	 (8.25,103.125) (0.25,0.125) (122,error) (0.25,0.125) q
     */
 
 	FirstLine("RunDrill()");
-
 	try {
 
 		cout << "Enter coordinates in the format '(x.x, y.y): \n"
-		        "Type '|' when your done." << endl;
+		        "Type 'q' when your done." << endl;
+
 		vector<Drill::Point> points;
 		while (true) {
 			Drill::Point point{};
-			if (!(cin >> point))
-				break; //istream is empty
 
-			if (cin.fail() && cin.peek() == Drill::quit)
-				break; //encountered 'quit' character.
+			if (!(cin >> point)) {
+				Drill::EndOfLoop(cin,Drill::quit,"Console input error.");
+				break;
 
+			}
 			points.push_back(point);
 		}
-
-		/*
-		// 1st approach, without the '>>' operator.
-		points = GetPoints(points);
-		*/
 		Drill::PrintPoints(points);
 
-		/*Dealing with files*/
 		//write to file
 		const string projectPath{
 				"/Users/yvesgingras/Code/Repos/Book-ProgrammingPrinciplesAndPracticeUsingCpp/Chapter10/Drill/"};
 		string pointsFileName{projectPath + "MyData.txt"};
 		ofstream outFileStream{GetOutFileStream(pointsFileName)};
 
-		for (const auto& point : points) {
-			outFileStream << '(' << point.x << ',' << point.y << ')' << endl;
+		for (const auto& currentPoint : points) {
+			outFileStream << '(' << currentPoint.x << ',' << currentPoint.y << ')' << endl;
 		}
 		outFileStream.close();
 
 		//Read from file
 		ifstream inFileStream{GetInFileStream(pointsFileName)};
 		vector<Drill::Point> processedPoints;
-		while (true) {
-			Drill::Point point{};
-			if (!(inFileStream >> point))
-				break;
-
-			processedPoints.push_back(point);
+		for (Drill::Point currentPoint; inFileStream >> currentPoint;) {
+			processedPoints.push_back(currentPoint);
 		}
 
-		//compare vectors
+		Drill::EndOfLoop(inFileStream,Drill::quit,"Error reading from file '" + pointsFileName + "'.");
+
+		//check vectors for equality.
 		for (int i = 0; i < points.size(); ++i) {
-			if (points[i].x != processedPoints[i].x || points[i].y != processedPoints[i].y)
-				throw Invalid("Vector of Point(s) comparison.\n"
-				              "Vectors content are not equal.");
-		}
+			if (points[i] != processedPoints[i]) {
+				ostringstream point{}; point << points[i];
+				ostringstream processedPoint{}; processedPoint << processedPoints[i];
 
+				throw Invalid("Vector of Point(s) comparison.\n"
+				              "Error: Points are not equal: " + point.str() + " | " + processedPoint.str());
+			}
+		}
 		Drill::PrintPoints(processedPoints);
 	}
 	catch (Invalid& e) {
@@ -235,14 +165,50 @@ void RunDrill() {
 
 	LastLine();
 }
-/*Drill - end*/
+
+//Exercises
+void RunExercise01() {
+	FirstLine("RunExercise01");
+
+	const string Exerc1FileName{"/Users/yvesgingras/Code/Repos/Book-ProgrammingPrinciplesAndPracticeUsingCpp/"
+							        "Chapter10/Exercises/Exercise01.txt"};
+
+	ifstream inFileStream{GetInFileStream(Exerc1FileName)};
+
+	int sum{Exercise01::GetSum(inFileStream)};
+	vector<int> values = Exercise01::mIntValues;
+
+	for (int i = 0; i < values.size(); ++i) {
+		if (i == values.size() - 1) {
+			cout << to_string(values[i]);
+			break;
+		}
+		cout << to_string(values[i]) << " + ";
+	}
+
+	cout << " = " << to_string(sum) << endl;
+	LastLine();
+}
+
+void RunExercises02To04() {
+	using namespace Exe2To4;
+
+	string folderPath{"/Users/yvesgingras/Code/Repos/Book-ProgrammingPrinciplesAndPracticeUsingCpp/Chapter10/Exercises/"};
+	string fileName{"RawTemps.txt"};
+	ofstream outFileStream{GetOutFileStream(folderPath + fileName)};
+
+	StoreTemps(outFileStream);
+}
+
 
 int main() {
 	cout << "Hello, Chapter10!" << endl;
 
 	try {
 //		RunFinalExample();
-		RunDrill();
+//		RunDrill();
+//		RunExercise01();
+		RunExercises02To04();
 	}
 	catch (fstream::ios_base::failure& e) {
 		auto exceptionWhat{string(e.what())};

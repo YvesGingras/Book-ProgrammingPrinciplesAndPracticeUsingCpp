@@ -48,6 +48,11 @@ namespace Temperatures
 	std::istream& operator>>(std::istream& inStream, Month& month);
 	std::istream& operator>>(std::istream& inStream, Year&  year);
 
+	std::vector<Temperatures::Reading> TemperaturesReading(std::ifstream& inStringFile);
+	std::vector<Temperatures::Month> MonthsReading(std::ifstream& inStringFile);
+	std::vector<Temperatures::Year> YearsReading(std::ifstream& inSteamFile);
+	void PrintTemperaturesData(const std::vector<Temperatures::Year>& years);
+
 	void EndOfLoop(std::istream& inStream, char terminator, std::string errorMessage);
 	int MonthToInt(std::string month);
 	bool IsValid(const Reading& reading);
