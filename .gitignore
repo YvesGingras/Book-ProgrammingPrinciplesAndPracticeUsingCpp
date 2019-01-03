@@ -58,6 +58,9 @@
 /.idea/**
 /ProvidedCode/**
 /Z_Archives/**
+/Libraries/**
+
+
 /Chapter00/.idea/**
 /Chapter03/.idea/**
 /Chapter04/.idea/**
@@ -68,6 +71,29 @@
 /Chapter08/.idea/**
 /Chapter09/.idea/**
 /Chapter10/.idea/**
+/Chapter12
+/Chapter14/
+#/Chapter14/.idea/**
+#/Chapter17
+/Chapter17/.idea/**
+
+#only a few 'Try this' yet in chapter 11
+# so it is not 'pushed to gitHub'
+/Chapter11
+
+#pointless to implement GUI & Cie.
+#looking forward to work with with QT...
+
+
+#/Chapter12/.idea/**
+#/Chapter12/fltk
+/Chapter12/fltk/**
+#/Chapter12/fltk2
+#/Chapter12/fltk2/**
+#/Chapter12/fltk2/.idea/**
+
+
+
 
 
 
