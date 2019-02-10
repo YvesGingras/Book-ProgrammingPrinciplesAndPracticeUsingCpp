@@ -75,8 +75,8 @@
 /Chapter14/
 #/Chapter14/.idea/**
 /Chapter17/.idea/**
-#/Chapter18
 /Chapter18/.idea/**
+/Chapter19/.idea/**
 
 #only a few 'Try this' yet in chapter 11
 # so it is not 'pushed to gitHub'
